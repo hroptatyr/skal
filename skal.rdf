@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="owl2html.xslt.xml"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:dcat="http://www.w3.org/ns/dcat#"
+   xmlns:dct="http://purl.org/dc/terms/"
+   xmlns:owl="http://www.w3.org/2002/07/owl#"
+   xmlns:pav="http://purl.org/pav/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+   xmlns:sh="http://www.w3.org/ns/shacl#"
+   xmlns:skal="http://purl.org/skal/"
+   xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+   xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+   xmlns:tempo="http://purl.org/tempo/"
+   xmlns:vann="http://purl.org/vocab/vann/"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+  <owl:Ontology rdf:about="http://purl.org/skal/">
+    <dc:abstract xml:lang="en">skal is a lightweight ontology for modelling transitive alignments (if A aligns to B, and B aligns to C, then A also aligns to C) without asserting statements on the aligned concepts themselves.  It models alignments as reified individuals that group two or more concepts and optionally qualify their validity in time and/or their distance to each other.</dc:abstract>
+    <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sebastian Freundt</dc:creator>
+    <dc:description xml:lang="en">Overview
+--------
+skal is a lightweight ontology for modelling transitive alignments (if A aligns to B, and B aligns to C, then A also aligns to C) without asserting statements on the aligned concepts themselves.  It models alignments as reified individuals that group two or more concepts, and optionally qualify their validity in time and/or their distance to each other.
+
+Using reification, skal allows for assertions to exist where they belong: as third‑party, auditable claims.  Altering (or more precisely contaminating) concepts is not necessary.
+
+Inspired by SKOS's only transitive property to assert matches, `skos:exactMatch`, a special class `skal:ExactMatch` is introduced: It represents an alignment with indefinite temporal validity and a diameter of 0.
+
+
+Motivation
+----------
+External vocabularies, third‑party thesauri, legacy datasets, or community standards are most likely not under one's control.  And yet, resources of different publishers or data vendors sometimes need to be aligned because parts of a system or workflow reference one resource whereas other parts might use concepts from a second resource.
+
+Perhaps the prominent example is the financial industry with its competing symbologies, classifications, or rating systems.  Unlike open data or open access collections (think Wikidata, geonames, RefSeq, UniProt, etc.) vendors in the financial industry regularly refuse to acknowledge a competitor's scheme as part of the vendor lock-in strategy.  But even in open data or open access systems the evolution of concepts may affect the "exactness" of alignment information over time.
+
+What's needed is alignment as a first‑class entity, owned, named, and governed by the aligning party.  And what must be avoided are large, redundant cliques of pairwise `skos:exactMatch` triples.
+
+
+An example
+----------
+</dc:description>
+    <dct:creator rdf:resource="https://orcid.org/0000-0002-7352-2825"/>
+    <dct:format rdf:datatype="http://www.w3.org/2001/XMLSchema#string">text/turtle</dct:format>
+    <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-05-01T05:00:00Z</dct:issued>
+    <dct:language rdf:datatype="http://www.w3.org/2001/XMLSchema#language">en</dct:language>
+    <dct:license rdf:resource="https://creativecommons.org/licenses/by-sa/4.0/"/>
+    <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-05-01T05:00:00Z</dct:modified>
+    <dct:publisher rdf:resource="https://orcid.org/0000-0002-7352-2825"/>
+    <dct:title>skal - skos alignments</dct:title>
+    <vann:preferredNamespacePrefix rdf:datatype="http://www.w3.org/2001/XMLSchema#string">skal</vann:preferredNamespacePrefix>
+    <vann:preferredNamespaceUri>http://purl.org/skal/</vann:preferredNamespaceUri>
+    <rdfs:label xml:lang="en">skal</rdfs:label>
+    <rdfs:seeAlso rdf:resource="https://github.com/hroptatyr/skal"/>
+    <owl:imports rdf:resource="http://purl.org/tempo/"/>
+    <owl:imports rdf:resource="http://www.w3.org/2004/02/skos/core#"/>
+    <owl:versionIRI rdf:resource="http://purl.org/skal/0.1/"/>
+    <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0.1</owl:versionInfo>
+    <dcat:downloadURL rdf:resource="http://purl.org/skal/rdf"/>
+    <dcat:downloadURL rdf:resource="http://purl.org/skal/ttl"/>
+  </owl:Ontology>
+  <owl:Class rdf:about="http://purl.org/skal/Alignment">
+    <rdfs:comment xml:lang="en">A reified alignment that connects multiple resources.</rdfs:comment>
+    <rdfs:label xml:lang="en">alignment</rdfs:label>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+        <owl:onProperty rdf:resource="http://purl.org/skal/aligns"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="http://purl.org/skal/ExactAlignment">
+    <rdfs:comment xml:lang="en">An alignment with a diameter of exactly 0.</rdfs:comment>
+    <rdfs:label xml:lang="en">exact alignment</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://purl.org/skal/Alignment"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</owl:hasValue>
+        <owl:onProperty rdf:resource="http://purl.org/skal/diameter"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="http://purl.org/skal/ExactMatch">
+    <rdfs:comment xml:lang="en">A reified n-ary alignment describing a SKOS exactMatch group.</rdfs:comment>
+    <rdfs:label xml:lang="en">exact match</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://purl.org/skal/Alignment"/>
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf>
+          <rdf:Description>
+            <rdf:first rdf:resource="http://purl.org/skal/PermanentAlignment"/>
+            <rdf:rest>
+              <rdf:Description>
+                <rdf:first rdf:resource="http://purl.org/skal/ExactAlignment"/>
+                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+              </rdf:Description>
+            </rdf:rest>
+          </rdf:Description>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <owl:hasKey rdf:resource="http://purl.org/skal/aligns"/>
+  </owl:Class>
+  <sh:NodeShape rdf:about="http://purl.org/skal/ExactMatchRuleShape">
+    <rdfs:comment xml:lang="en">SHACL rule to materialise pairwise skos:exactMatch triples from skal:ExactMatch individuals.</rdfs:comment>
+    <sh:rule>
+      <sh:SPARQLRule>
+        <sh:construct>
+			CONSTRUCT {
+				?x skos:exactMatch ?y .
+				?y skos:exactMatch ?x .
+			}
+			WHERE {
+				?a	a	skal:ExactMatch ;
+					skal:aligns	?x , ?y .
+				FILTER (?x != ?y)
+			}
+		</sh:construct>
+        <sh:prefixes>
+          <rdf:Description>
+            <sh:declare>
+              <rdf:Description>
+                <sh:namespace rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2004/02/skos/core#</sh:namespace>
+                <sh:prefix>skos</sh:prefix>
+              </rdf:Description>
+            </sh:declare>
+            <sh:declare>
+              <rdf:Description>
+                <sh:namespace rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://purl.org/skal/</sh:namespace>
+                <sh:prefix>skal</sh:prefix>
+              </rdf:Description>
+            </sh:declare>
+          </rdf:Description>
+        </sh:prefixes>
+      </sh:SPARQLRule>
+    </sh:rule>
+    <sh:targetClass rdf:resource="http://purl.org/skal/ExactMatch"/>
+  </sh:NodeShape>
+  <owl:Class rdf:about="http://purl.org/skal/MeasuredAlignment">
+    <rdfs:comment xml:lang="en">An alignment with a measured (or otherwise determined) diameter.</rdfs:comment>
+    <rdfs:label xml:lang="en">measured alignment</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://purl.org/skal/Alignment"/>
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf>
+          <rdf:Description>
+            <rdf:first rdf:resource="http://purl.org/skal/Alignment"/>
+            <rdf:rest>
+              <rdf:Description>
+                <rdf:first>
+                  <owl:Restriction>
+                    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+                    <owl:onProperty rdf:resource="http://purl.org/skal/diameter"/>
+                  </owl:Restriction>
+                </rdf:first>
+                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+              </rdf:Description>
+            </rdf:rest>
+          </rdf:Description>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="http://purl.org/skal/Metric">
+    <rdfs:comment xml:lang="en">The metric used to express the diameter of an alignment</rdfs:comment>
+    <rdfs:label xml:lang="en">metric</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="http://purl.org/skal/PermanentAlignment">
+    <rdfs:comment xml:lang="en">An alignment that holds permanently.</rdfs:comment>
+    <rdfs:label xml:lang="en">permanent alignment</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://purl.org/skal/Alignment"/>
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf>
+          <rdf:Description>
+            <rdf:first rdf:resource="http://purl.org/skal/Alignment"/>
+            <rdf:rest>
+              <rdf:Description>
+                <rdf:first>
+                  <owl:Class>
+                    <owl:complementOf rdf:resource="http://purl.org/skal/TemporaryAlignment"/>
+                  </owl:Class>
+                </rdf:first>
+                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+              </rdf:Description>
+            </rdf:rest>
+          </rdf:Description>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="http://purl.org/skal/TemporaryAlignment">
+    <rdfs:comment xml:lang="en">An alignment that holds during the specified period of validity.</rdfs:comment>
+    <rdfs:label xml:lang="en">temporary alignment</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://purl.org/skal/Alignment"/>
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf>
+          <rdf:Description>
+            <rdf:first rdf:resource="http://purl.org/skal/Alignment"/>
+            <rdf:rest>
+              <rdf:Description>
+                <rdf:first>
+                  <owl:Class>
+                    <owl:unionOf>
+                      <rdf:Description>
+                        <rdf:first>
+                          <owl:Restriction>
+                            <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+                            <owl:onProperty rdf:resource="http://purl.org/tempo/validFrom"/>
+                          </owl:Restriction>
+                        </rdf:first>
+                        <rdf:rest>
+                          <rdf:Description>
+                            <rdf:first>
+                              <owl:Restriction>
+                                <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+                                <owl:onProperty rdf:resource="http://purl.org/tempo/validTill"/>
+                              </owl:Restriction>
+                            </rdf:first>
+                            <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                          </rdf:Description>
+                        </rdf:rest>
+                      </rdf:Description>
+                    </owl:unionOf>
+                  </owl:Class>
+                </rdf:first>
+                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+              </rdf:Description>
+            </rdf:rest>
+          </rdf:Description>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <owl:hasKey>
+      <rdf:Description>
+        <rdf:first rdf:resource="http://purl.org/skal/aligns"/>
+        <rdf:rest>
+          <rdf:Description>
+            <rdf:first rdf:resource="http://purl.org/tempo/validFrom"/>
+            <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+          </rdf:Description>
+        </rdf:rest>
+      </rdf:Description>
+    </owl:hasKey>
+    <owl:hasKey>
+      <rdf:Description>
+        <rdf:first rdf:resource="http://purl.org/skal/aligns"/>
+        <rdf:rest>
+          <rdf:Description>
+            <rdf:first rdf:resource="http://purl.org/tempo/validTill"/>
+            <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+          </rdf:Description>
+        </rdf:rest>
+      </rdf:Description>
+    </owl:hasKey>
+  </owl:Class>
+  <owl:ObjectProperty rdf:about="http://purl.org/skal/aligns">
+    <rdfs:comment xml:lang="en">Links an alignment individual to each concept it aligns.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://purl.org/skal/Alignment"/>
+    <rdfs:label xml:lang="en">aligns</rdfs:label>
+    <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <skos:note>This property is explicitly not an owl:InverseFunctionalProperty because the point of reified alignments is that additional properties (like validity or sources) might be associated with the alignment.</skos:note>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:about="http://purl.org/skal/diameter">
+    <rdfs:comment xml:lang="en">Measures the "exactness" of an alignment, optionally qualified by the metric in `skal:metric`.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://purl.org/skal/Alignment"/>
+    <rdfs:label xml:lang="en">diameter</rdfs:label>
+    <rdfs:range>
+      <owl:Datatype>
+        <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+        <owl:withRestrictions>
+          <rdf:Description>
+            <rdf:first>
+              <rdf:Description>
+                <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</xsd:minInclusive>
+              </rdf:Description>
+            </rdf:first>
+            <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+          </rdf:Description>
+        </owl:withRestrictions>
+      </owl:Datatype>
+    </rdfs:range>
+  </owl:DatatypeProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/skal/metric">
+    <rdfs:comment xml:lang="en">Metric used for the diameter value of the alignment.
+
+Because alignments are inherently n-ary the term metric is to be understood in a more general fashion, e.g. n-metric, or n-ultrametric, MST path length, or Steiner tree length, etc.
+
+Moreover, the lower bound of any metric is 0, which holds iff all concepts are exactly aligned.  That means an alignment with diameter 0 need not explicitly state the metric used, and if it does the metric must be considered interchangeable with any other metric.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://purl.org/skal/Alignment"/>
+    <rdfs:label xml:lang="en">metric</rdfs:label>
+    <rdfs:range rdf:resource="http://purl.org/skal/Metric"/>
+  </owl:ObjectProperty>
+</rdf:RDF>

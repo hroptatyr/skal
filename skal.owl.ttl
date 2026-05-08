@@ -1,0 +1,301 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skal: <http://purl.org/skal/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix tempo: <http://purl.org/tempo/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+
+#################################################################
+# Ontology header
+#################################################################
+
+skal:
+	a	owl:Ontology ;
+	dc:abstract	"""skal is a lightweight ontology for modelling transitive alignments (if A aligns to B, and B aligns to C, then A also aligns to C) without asserting statements on the aligned concepts themselves.  It models alignments as reified individuals that group two or more concepts and optionally qualify their validity in time and/or their distance to each other."""@en ;
+	dc:creator	"Sebastian Freundt"^^xsd:string ;
+	dc:description	"""Overview
+--------
+skal is a lightweight ontology for modelling transitive alignments (if A aligns to B, and B aligns to C, then A also aligns to C) without asserting statements on the aligned concepts themselves.  It models alignments as reified individuals that group two or more concepts, and optionally qualify their validity in time and/or their distance to each other.
+
+Using reification, skal allows for assertions to exist where they belong: as third‑party, auditable claims.  Altering (or more precisely contaminating) concepts is not necessary.
+
+Inspired by SKOS's only transitive property to assert matches, `skos:exactMatch`, a special class `skal:ExactMatch` is introduced: It represents an alignment with indefinite temporal validity and a diameter of 0.
+
+
+Motivation
+----------
+External vocabularies, third‑party thesauri, legacy datasets, or community standards are most likely not under one's control.  And yet, resources of different publishers or data vendors sometimes need to be aligned because parts of a system or workflow reference one resource whereas other parts might use concepts from a second resource.
+
+Perhaps the prominent example is the financial industry with its competing symbologies, classifications, or rating systems.  Unlike open data or open access collections (think Wikidata, geonames, RefSeq, UniProt, etc.) vendors in the financial industry regularly refuse to acknowledge a competitor's scheme as part of the vendor lock-in strategy.  But even in open data or open access systems the evolution of concepts may affect the "exactness" of alignment information over time.
+
+What's needed is alignment as a first‑class entity, owned, named, and governed by the aligning party.  And what must be avoided are large, redundant cliques of pairwise `skos:exactMatch` triples.
+
+
+An example
+----------
+"""@en ;
+	dcat:downloadURL	<http://purl.org/skal/rdf> , <http://purl.org/skal/ttl> ;
+	dct:creator	<https://orcid.org/0000-0002-7352-2825> ;
+	dct:format	"text/turtle"^^xsd:string ;
+	dct:issued	"2026-05-01T05:00:00Z"^^xsd:dateTime ;
+	dct:language	"en"^^xsd:language ;
+	dct:license	<https://creativecommons.org/licenses/by-sa/4.0/> ;
+	dct:modified	"2026-05-01T05:00:00Z"^^xsd:dateTime ;
+	dct:publisher	<https://orcid.org/0000-0002-7352-2825> ;
+	dct:title	"skal - skos alignments" ;
+	owl:imports	skos: , tempo: ;
+	owl:versionIRI	<http://purl.org/skal/0.1/> ;
+	owl:versionInfo	"0.1"^^xsd:string ;
+	rdfs:label	"skal"@en ;
+	rdfs:seeAlso	<https://github.com/hroptatyr/skal> ;
+	vann:preferredNamespacePrefix	"skal"^^xsd:string ;
+	vann:preferredNamespaceUri	"http://purl.org/skal/" .
+
+#################################################################
+# Classes
+#################################################################
+
+skal:Alignment
+	a	owl:Class ;
+	owl:equivalentClass	[
+		a	owl:Restriction ;
+		owl:onProperty	skal:aligns ;
+		owl:minCardinality	"1"^^xsd:nonNegativeInteger
+	] ;
+	rdfs:comment	"A reified alignment that connects multiple resources."@en ;
+	rdfs:label	"alignment"@en .
+
+skal:TemporaryAlignment
+	a	owl:Class ;
+	owl:equivalentClass	[
+		a	owl:Class ;
+		owl:intersectionOf	(
+		skal:Alignment
+		[
+			a	owl:Class ;
+			owl:unionOf	(
+			[
+				a	owl:Restriction ;
+				owl:onProperty	tempo:validFrom ;
+				owl:minCardinality	"1"^^xsd:nonNegativeInteger
+			] [
+				a	owl:Restriction ;
+				owl:onProperty	tempo:validTill ;
+				owl:minCardinality	"1"^^xsd:nonNegativeInteger
+			] )
+		] )
+	] ;
+	owl:hasKey	( skal:aligns tempo:validFrom ) ;
+	owl:hasKey	( skal:aligns tempo:validTill ) ;
+	rdfs:comment	"An alignment that holds during the specified period of validity."@en ;
+	rdfs:label	"temporary alignment"@en ;
+	rdfs:subClassOf	skal:Alignment .
+
+skal:PermanentAlignment
+	a	owl:Class ;
+	owl:equivalentClass	[
+		a	owl:Class ;
+		owl:intersectionOf	(
+		skal:Alignment
+		[
+			a	owl:Class ;
+			owl:complementOf	skal:TemporaryAlignment
+		] )
+	] ;
+	rdfs:comment	"An alignment that holds permanently."@en ;
+	rdfs:label	"permanent alignment"@en ;
+	rdfs:subClassOf	skal:Alignment .
+
+skal:MeasuredAlignment
+	a	owl:Class ;
+	owl:equivalentClass	[
+		a	owl:Class ;
+		owl:intersectionOf	(
+		skal:Alignment
+		[
+			a	owl:Restriction ;
+			owl:onProperty	skal:diameter ;
+			owl:minCardinality	"1"^^xsd:nonNegativeInteger
+		] )
+	] ;
+	rdfs:comment	"An alignment with a measured (or otherwise determined) diameter."@en ;
+	rdfs:label	"measured alignment"@en ;
+	rdfs:subClassOf	skal:Alignment .
+
+skal:ExactAlignment
+	a	owl:Class ;
+	owl:equivalentClass	[
+		a	owl:Restriction ;
+		owl:onProperty	skal:diameter ;
+		owl:hasValue	"0.0"^^xsd:decimal
+	] ;
+	rdfs:comment	"An alignment with a diameter of exactly 0."@en ;
+	rdfs:label	"exact alignment"@en ;
+	rdfs:subClassOf	skal:Alignment .
+
+skal:ExactMatch
+	a	owl:Class ;
+	owl:equivalentClass	[
+		a	owl:Class ;
+		owl:intersectionOf	(
+		skal:PermanentAlignment
+		skal:ExactAlignment
+		)
+	] ;
+	owl:hasKey	skal:aligns ;
+	rdfs:comment	"A reified n-ary alignment describing a SKOS exactMatch group."@en ;
+	rdfs:label	"exact match"@en ;
+	rdfs:subClassOf	skal:Alignment .
+
+skal:Metric
+	a	owl:Class ;
+	rdfs:comment	"The metric used to express the diameter of an alignment"@en ;
+	rdfs:label	"metric"@en .
+
+#################################################################
+# Object Properties
+#################################################################
+
+skal:aligns
+	a	owl:ObjectProperty ;
+	rdfs:comment	"Links an alignment individual to each concept it aligns."@en ;
+	rdfs:domain	skal:Alignment ;
+	rdfs:label	"aligns"@en ;
+	rdfs:range	owl:Thing ;
+	skos:note	"This property is explicitly not an owl:InverseFunctionalProperty because the point of reified alignments is that additional properties (like validity or sources) might be associated with the alignment." .
+
+skal:metric
+	a	owl:ObjectProperty ;
+	rdfs:comment	"""Metric used for the diameter value of the alignment.
+
+Because alignments are inherently n-ary the term metric is to be understood in a more general fashion, e.g. n-metric, or n-ultrametric, MST path length, or Steiner tree length, etc.
+
+Moreover, the lower bound of any metric is 0, which holds iff all concepts are exactly aligned.  That means an alignment with diameter 0 need not explicitly state the metric used, and if it does the metric must be considered interchangeable with any other metric."""@en ;
+	rdfs:domain	skal:Alignment ;
+	rdfs:label	"metric"@en ;
+	rdfs:range	skal:Metric .
+
+#################################################################
+# Datatype Properties
+#################################################################
+
+skal:diameter
+	a	owl:DatatypeProperty ;
+	rdfs:comment	"""Measures the \"exactness\" of an alignment, optionally qualified by the metric in `skal:metric`."""@en ;
+	rdfs:domain	skal:Alignment ;
+	rdfs:range	[
+		a	owl:Datatype ;
+		owl:onDatatype	xsd:decimal ;
+		owl:withRestrictions ( [
+			xsd:minInclusive	"0.0"^^xsd:decimal
+		] )
+	] ;
+	rdfs:label	"diameter"@en .
+
+#################################################################
+# SHACL rules
+#################################################################
+# These produce explicit pairwise skos:exactMatch triples.
+
+skal:ExactMatchRuleShape
+	a	sh:NodeShape ;
+	rdfs:comment	"SHACL rule to materialise pairwise skos:exactMatch triples from skal:ExactMatch individuals."@en ;
+	sh:targetClass	skal:ExactMatch ;
+
+	sh:rule [
+	        a sh:SPARQLRule ;
+	        sh:prefixes [
+			sh:declare [
+				sh:prefix	"skos" ;
+				sh:namespace	"http://www.w3.org/2004/02/skos/core#"^^xsd:anyURI ;
+			] ;
+			sh:declare [
+				sh:prefix	"skal" ;
+				sh:namespace	"http://purl.org/skal/"^^xsd:anyURI ;
+			] ;
+		] ;
+		sh:construct """
+			CONSTRUCT {
+				?x skos:exactMatch ?y .
+				?y skos:exactMatch ?x .
+			}
+			WHERE {
+				?a	a	skal:ExactMatch ;
+					skal:aligns	?x , ?y .
+				FILTER (?x != ?y)
+			}
+		""" ;
+	] .
+
+#################################################################
+# Examples
+#################################################################
+#
+#<http://example.com/be.align>
+#	a	skal:PermanentAlignment ;
+#	skal:diameter	"0.0"^^xsd:decimal ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q31> , <http://sws.geonames.org/2802361/> .
+#
+#<http://example.com/de.tmp.align>
+#	a	skal:Alignment ;
+#	skal:diameter	"0.0"^^xsd:decimal ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q183> , <http://sws.geonames.org/2802361/> ;
+#	tempo:validFrom "1974-01-01"^^xsd:date .
+#
+#<http://example.com/BE.align>
+#	a	skal:ExactMatch ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q31> , <https://dbpedia.or/resource/Belgium> , <https://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes-Adjunct/BE> .
+#
+#
+#<http://example.com/fr.align>
+#	a	skal:Alignment ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q142> , <http://sws.geonames.org/3017382/> .
+#
+#<http://example.com/FR.align>
+#	a	skal:Alignment ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q142> , <https://dbpedia.org/resource/France> , <https://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes-Adjunct/FR> .
+#
+#<http://example.com/de.tmp.align>
+#	a	skal:TemporaryAlignment ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q183> , <http://sws.geonames.org/2802361/> ;
+#	tempo:validFrom "1974-01-01"^^xsd:date .
+#
+#<http://example.com/Q183.tmp.align>
+#	a	skal:TemporaryAlignment ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q183> , <https://dbpedia.org/resource/Germany> ;
+#	tempo:validFrom	"1949-01-01"^^xsd:date .
+#
+#<http://example.com/Q183.tmp2.align>
+#	a	skal:TemporaryAlignment ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q183> , <https://dbpedia.org/resource/Germany> ;
+#	tempo:validFrom	"1974-01-01"^^xsd:date ;
+#	tempo:validTill	"1990-10-03"^^xsd:date .
+#
+#<http://example.com/Q183.tmp3.align>
+#	a	skal:TemporaryAlignment ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q183> , <https://dbpedia.org/resource/Germany> ;
+#	tempo:validFrom	"1974-01-01"^^xsd:date .
+#
+#<http://example.com/Q183.tmp4.align>
+#	a	skal:Alignment ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q183> , <https://dbpedia.org/resource/Germany> ;
+#	tempo:validFrom	"1974-01-01"^^xsd:date .
+#
+#<http://example.com/DE.tmp.align>
+#	a	skal:TemporaryAlignment ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q183> , <https://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes-Adjunct/DE> ;
+#	tempo:validFrom "1974-01-01"^^xsd:date .
+#
+#<http://example.com/DE.tmp2.align>
+#	a	skal:TemporaryAlignment ;
+#	skal:aligns	<http://www.wikidata.org/entity/Q183> , <https://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes-Adjunct/DE> ;
+#	tempo:validTill "1990-10-03"^^xsd:date .
