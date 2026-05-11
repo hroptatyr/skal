@@ -314,7 +314,7 @@ td {
     "https://schema.org/description": [
       {
         "@language": "en",
-        "@value": "Overview\n--------\nskal is a lightweight ontology for modelling transitive alignments (if A aligns to B, and B aligns to C, then A also aligns to C) without asserting statements on the aligned concepts themselves.  It models alignments as reified individuals that group two or more concepts, and optionally qualify their validity in time and/or their distance to each other.\n\nUsing reification, skal allows for assertions to exist where they belong: as third‑party, auditable claims.  Altering (or more precisely contaminating) concepts is not necessary.\n\nInspired by SKOS's only transitive property to assert matches, `skos:exactMatch`, a special class `skal:ExactMatch` is introduced: It represents an alignment with indefinite temporal validity and a diameter of 0.\n\n\nMotivation\n----------\nExternal vocabularies, third‑party thesauri, legacy datasets, or community standards are most likely not under one's control.  And yet, resources of different publishers or data vendors sometimes need to be aligned because parts of a system or workflow reference one resource whereas other parts might use concepts from a second resource.\n\nPerhaps the prominent example is the financial industry with its competing symbologies, classifications, or rating systems.  Unlike open data or open access collections (think Wikidata, geonames, RefSeq, UniProt, etc.) vendors in the financial industry regularly refuse to acknowledge a competitor's scheme as part of the vendor lock-in strategy.  But even in open data or open access systems the evolution of concepts may affect the \"exactness\" of alignment information over time.\n\nWhat's needed is alignment as a first‑class entity, owned, named, and governed by the aligning party.  And what must be avoided are large, redundant cliques of pairwise `skos:exactMatch` triples.\n\n\nAn example\n----------\n"
+        "@value": "Overview\n--------\nskal is a lightweight ontology for modelling transitive alignments (if A aligns to B, and B aligns to C, then A also aligns to C) without asserting statements on the aligned concepts themselves.  It models alignments as reified individuals that group two or more concepts, and optionally qualify their validity in time and/or their distance to each other.\n\nUsing reification, skal allows for assertions to exist where they belong: as third‑party, auditable claims.  Altering (or more precisely contaminating) concepts is not necessary.\n\nInspired by SKOS's only transitive property to assert matches, `skos:exactMatch`, a special class `skal:ExactMatch` is introduced: It represents an alignment with indefinite temporal validity and a diameter of 0.\n\n\nMotivation\n----------\nExternal vocabularies, third‑party thesauri, legacy datasets, or community standards are most likely not under one's control.  And yet, resources of different publishers or data vendors sometimes need to be aligned because parts of a system or workflow reference one resource whereas other parts might use concepts from a second resource.\n\nPerhaps the prominent example is the financial industry with its competing symbologies, classifications, or rating systems.  Unlike open data or open access collections (think Wikidata, geonames, RefSeq, UniProt, etc.) vendors in the financial industry regularly refuse to acknowledge a competitor's scheme as part of the vendor lock-in strategy.  But even in open data or open access systems the evolution of concepts may affect the \"exactness\" of alignment information over time.\n\nWhat's needed is alignment as a first‑class entity, owned, named, and governed by the aligning party.  And what must be avoided are large, redundant cliques of pairwise `skos:exactMatch` triples.\n\n\nAn example\n----------\nIn 1974, the majority of ISO 3166 codes was released.  As a preparation the committee carefully assembled a list of sovereign states and dependent territories.  The findings went into what the country level code (ISO 3166-1) entails, a backing definition if you will.  The 1974 definition of of the ISO 3166-1 alpha-2 code DE reads: the Federal Republic of Germany.\n\nSimilarly, but unfortunately not contemporarily, Wikidata introduced the concept of the Federal Republic of Germany (Q713750).  It is thinkable, if not likely, that an editor in 1974 were to equate these two:\n\n     wd:Q713750 skos:exactMatch iso3166-1-adj:DE .\n\nAfter the unification of FRG and GDR in 1990 ISO went on to add a remark: \"the code elements for the former German Democratic Republic (DD, DDR, 278) have been incorporated into the code elements for Germany.\"  But essentially the scope of ISO code DE was left untouched.\n\nMeanwhile, Wikidata added a replacement concept, Q183, to accomodate for unified Germany, and updated the alignment to:\n\n    wd:Q183 skos:exactMatch iso3166-1-adj:DE .\n\nand invalidated the alignment in Q713750.  This is problematic.  Q183's history begins in 1990 whereas DE's history begins in 1949, efficaciously, or 1990 and 1974, respectively, in terms of validity.  It could be argued that exactMatch is the wrong qualifier on account of different temporal scopes.\n\nEven if RDF* (or reification) is used to capture:\n\n    <<wd:Q713750 skos:exactMatch iso3166-1-adj:DE>>\n            tempo:validFrom \"1974\"^^xsd:gYear ;\n            tempo:validTill \"1990\"^^xsd:gYear .\n    <<wd:Q183 skos:exactMatch iso3166-1-adj:DE>>\n            tempo:validFrom \"1990\"^^xsd:gYear .\n\nthe semantics of SKOS don't allow for both ground assertions to live in the same graph.  A reasoner would unforgivingly infer:\n\n    wd:Q713750 skos:exactMatch wd:Q183 .\n\nbecause of transitivity.\n\nStrictly adhering to SKOS the solution would be to demote both assertions to `skos:closeMatch` on account of different temporal scopes between all concepts in question which in hindsight, and without incorporating version history, leaves us guessing if there had ever been an exact match.\n\n\nskal to the rescue\n------------------\nAs mentioned before, skal is aware of concepts that diverge in time.  The example would simply be modelled as:\n\n    []\n            a skal:ExactAlignment ;\n            skal:aligns wd:Q183 , iso3166-1-adj:DE ;\n            tempo:validFrom \"1990\"^^xsd:gYear ;\n            dct:replaces [\n                    a skal:ExactAlignment ;\n                    skal:aligns wd:Q713750 , iso3166-1-adj:DE ;\n                    tempo:validFrom \"1974\"^^xsd:gYear ;\n                    tempo:validTill \"1990\"^^xsd:gYear .\n            ] .\n\n(in this case using blank nodes, and with Dublin Core terminology to link replacements)"
       }
     ],
     "https://schema.org/license": [
@@ -450,7 +450,42 @@ td {
 <p>External vocabularies, third‑party thesauri, legacy datasets, or community standards are most likely not under one's control.  And yet, resources of different publishers or data vendors sometimes need to be aligned because parts of a system or workflow reference one resource whereas other parts might use concepts from a second resource.</p>
 <p>Perhaps the prominent example is the financial industry with its competing symbologies, classifications, or rating systems.  Unlike open data or open access collections (think Wikidata, geonames, RefSeq, UniProt, etc.) vendors in the financial industry regularly refuse to acknowledge a competitor's scheme as part of the vendor lock-in strategy.  But even in open data or open access systems the evolution of concepts may affect the "exactness" of alignment information over time.</p>
 <p>What's needed is alignment as a first‑class entity, owned, named, and governed by the aligning party.  And what must be avoided are large, redundant cliques of pairwise <code>skos:exactMatch</code> triples.</p>
-<h2>An example</h2></dd>
+<h2>An example</h2>
+<p>In 1974, the majority of ISO 3166 codes was released.  As a preparation the committee carefully assembled a list of sovereign states and dependent territories.  The findings went into what the country level code (ISO 3166-1) entails, a backing definition if you will.  The 1974 definition of of the ISO 3166-1 alpha-2 code DE reads: the Federal Republic of Germany.</p>
+<p>Similarly, but unfortunately not contemporarily, Wikidata introduced the concept of the Federal Republic of Germany (Q713750).  It is thinkable, if not likely, that an editor in 1974 were to equate these two:</p>
+<pre><code> wd:Q713750 skos:exactMatch iso3166-1-adj:DE .
+</code></pre>
+<p>After the unification of FRG and GDR in 1990 ISO went on to add a remark: "the code elements for the former German Democratic Republic (DD, DDR, 278) have been incorporated into the code elements for Germany."  But essentially the scope of ISO code DE was left untouched.</p>
+<p>Meanwhile, Wikidata added a replacement concept, Q183, to accomodate for unified Germany, and updated the alignment to:</p>
+<pre><code>wd:Q183 skos:exactMatch iso3166-1-adj:DE .
+</code></pre>
+<p>and invalidated the alignment in Q713750.  This is problematic.  Q183's history begins in 1990 whereas DE's history begins in 1949, efficaciously, or 1990 and 1974, respectively, in terms of validity.  It could be argued that exactMatch is the wrong qualifier on account of different temporal scopes.</p>
+<p>Even if RDF* (or reification) is used to capture:</p>
+<pre><code>&lt;&lt;wd:Q713750 skos:exactMatch iso3166-1-adj:DE&gt;&gt;
+        tempo:validFrom "1974"^^xsd:gYear ;
+        tempo:validTill "1990"^^xsd:gYear .
+&lt;&lt;wd:Q183 skos:exactMatch iso3166-1-adj:DE&gt;&gt;
+        tempo:validFrom "1990"^^xsd:gYear .
+</code></pre>
+<p>the semantics of SKOS don't allow for both ground assertions to live in the same graph.  A reasoner would unforgivingly infer:</p>
+<pre><code>wd:Q713750 skos:exactMatch wd:Q183 .
+</code></pre>
+<p>because of transitivity.</p>
+<p>Strictly adhering to SKOS the solution would be to demote both assertions to <code>skos:closeMatch</code> on account of different temporal scopes between all concepts in question which in hindsight, and without incorporating version history, leaves us guessing if there had ever been an exact match.</p>
+<h2>skal to the rescue</h2>
+<p>As mentioned before, skal is aware of concepts that diverge in time.  The example would simply be modelled as:</p>
+<pre><code>[]
+        a skal:ExactAlignment ;
+        skal:aligns wd:Q183 , iso3166-1-adj:DE ;
+        tempo:validFrom "1990"^^xsd:gYear ;
+        dct:replaces [
+                a skal:ExactAlignment ;
+                skal:aligns wd:Q713750 , iso3166-1-adj:DE ;
+                tempo:validFrom "1974"^^xsd:gYear ;
+                tempo:validTill "1990"^^xsd:gYear .
+        ] .
+</code></pre>
+<p>(in this case using blank nodes, and with Dublin Core terminology to link replacements)</p></dd>
           </div>
           <div>
             <dt>
@@ -610,16 +645,6 @@ td {
               <td>
                 <span>
                   <span>
-                    <a href="http://purl.org/tempo/validFrom">tempo:validFrom</a>
-                    <span>
-                      <span class="cardinality">min</span>
-                      <span>1</span>
-                    </span><br>
-                  </span>
-                </span>
-                <span class="cardinality">and</span>
-                <span>
-                  <span>
                     <a href="http://purl.org/tempo/validTill">tempo:validTill</a>
                     <span>
                       <span class="cardinality">min</span>
@@ -628,11 +653,21 @@ td {
                   </span>
                 </span>
                 <span class="cardinality">and</span>
-                <span class="cardinality">or</span>
-                <span class="cardinality">and</span>
                 <span>
                   <a href="#alignment">alignment</a>
                   <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+                </span>
+                <span class="cardinality">and</span>
+                <span class="cardinality">or</span>
+                <span class="cardinality">and</span>
+                <span>
+                  <span>
+                    <a href="http://purl.org/tempo/validFrom">tempo:validFrom</a>
+                    <span>
+                      <span class="cardinality">min</span>
+                      <span>1</span>
+                    </span><br>
+                  </span>
                 </span>
               </td>
             </tr>

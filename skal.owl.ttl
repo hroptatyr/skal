@@ -42,7 +42,53 @@ What's needed is alignment as a first‑class entity, owned, named, and governed
 
 An example
 ----------
-"""@en ;
+In 1974, the majority of ISO 3166 codes was released.  As a preparation the committee carefully assembled a list of sovereign states and dependent territories.  The findings went into what the country level code (ISO 3166-1) entails, a backing definition if you will.  The 1974 definition of of the ISO 3166-1 alpha-2 code DE reads: the Federal Republic of Germany.
+
+Similarly, but unfortunately not contemporarily, Wikidata introduced the concept of the Federal Republic of Germany (Q713750).  It is thinkable, if not likely, that an editor in 1974 were to equate these two:
+
+     wd:Q713750 skos:exactMatch iso3166-1-adj:DE .
+
+After the unification of FRG and GDR in 1990 ISO went on to add a remark: "the code elements for the former German Democratic Republic (DD, DDR, 278) have been incorporated into the code elements for Germany."  But essentially the scope of ISO code DE was left untouched.
+
+Meanwhile, Wikidata added a replacement concept, Q183, to accomodate for unified Germany, and updated the alignment to:
+
+    wd:Q183 skos:exactMatch iso3166-1-adj:DE .
+
+and invalidated the alignment in Q713750.  This is problematic.  Q183's history begins in 1990 whereas DE's history begins in 1949, efficaciously, or 1990 and 1974, respectively, in terms of validity.  It could be argued that exactMatch is the wrong qualifier on account of different temporal scopes.
+
+Even if RDF* (or reification) is used to capture:
+
+    <<wd:Q713750 skos:exactMatch iso3166-1-adj:DE>>
+            tempo:validFrom "1974"^^xsd:gYear ;
+            tempo:validTill "1990"^^xsd:gYear .
+    <<wd:Q183 skos:exactMatch iso3166-1-adj:DE>>
+            tempo:validFrom "1990"^^xsd:gYear .
+
+the semantics of SKOS don't allow for both ground assertions to live in the same graph.  A reasoner would unforgivingly infer:
+
+    wd:Q713750 skos:exactMatch wd:Q183 .
+
+because of transitivity.
+
+Strictly adhering to SKOS the solution would be to demote both assertions to `skos:closeMatch` on account of different temporal scopes between all concepts in question which in hindsight, and without incorporating version history, leaves us guessing if there had ever been an exact match.
+
+
+skal to the rescue
+------------------
+As mentioned before, skal is aware of concepts that diverge in time.  The example would simply be modelled as:
+
+    []
+            a skal:ExactAlignment ;
+            skal:aligns wd:Q183 , iso3166-1-adj:DE ;
+            tempo:validFrom "1990"^^xsd:gYear ;
+            dct:replaces [
+                    a skal:ExactAlignment ;
+                    skal:aligns wd:Q713750 , iso3166-1-adj:DE ;
+                    tempo:validFrom "1974"^^xsd:gYear ;
+                    tempo:validTill "1990"^^xsd:gYear .
+            ] .
+
+(in this case using blank nodes, and with Dublin Core terminology to link replacements)"""@en ;
 	dcat:downloadURL	<http://purl.org/skal/rdf> , <http://purl.org/skal/ttl> ;
 	dct:creator	<https://orcid.org/0000-0002-7352-2825> ;
 	dct:format	"text/turtle"^^xsd:string ;
