@@ -644,21 +644,9 @@ td {
               </th>
               <td>
                 <span>
-                  <span>
-                    <a href="http://purl.org/tempo/validTill">tempo:validTill</a>
-                    <span>
-                      <span class="cardinality">min</span>
-                      <span>1</span>
-                    </span><br>
-                  </span>
-                </span>
-                <span class="cardinality">and</span>
-                <span>
                   <a href="#alignment">alignment</a>
                   <sup class="sup-c" title="OWL/RDFS Class">c</sup>
                 </span>
-                <span class="cardinality">and</span>
-                <span class="cardinality">or</span>
                 <span class="cardinality">and</span>
                 <span>
                   <span>
@@ -669,6 +657,18 @@ td {
                     </span><br>
                   </span>
                 </span>
+                <span class="cardinality">and</span>
+                <span>
+                  <span>
+                    <a href="http://purl.org/tempo/validTill">tempo:validTill</a>
+                    <span>
+                      <span class="cardinality">min</span>
+                      <span>1</span>
+                    </span><br>
+                  </span>
+                </span>
+                <span class="cardinality">and</span>
+                <span class="cardinality">or</span>
               </td>
             </tr>
           </table>
@@ -837,7 +837,14 @@ td {
               <th>
                 <a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
               </th>
-              <td><p>A reified n-ary alignment describing a SKOS exactMatch group.</p></td>
+              <td><p>A reified n-ary alignment describing a SKOS exactMatch group.</p>
+<p>This is a convenience class to allow for migrating existing <code>skos:exactMatch</code> collections to skal.</p></td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://www.w3.org/2004/02/skos/core#note" title="A general note, for any purpose. Defined in SKOS Vocabulary">Note</a>
+              </th>
+              <td><p>Individuals of this type employ the same semantics as <code>skos:exactMatch</code> assertions.  That is, a second individual that aligns one of the concepts of the first individual is considered <code>owl:sameAs</code> this first individual.  And thereby capturing the transitive closure of all concepts on the subject and object side of a <code>skos:exactMatch</code> collection.</p></td>
             </tr>
             <tr>
               <th>
@@ -883,7 +890,33 @@ td {
               <th>
                 <a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
               </th>
-              <td><p>The metric used to express the diameter of an alignment</p></td>
+              <td><p>The metric used to express the diameter of an alignment.</p></td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://www.w3.org/2004/02/skos/core#note" title="A general note, for any purpose. Defined in SKOS Vocabulary">Note</a>
+              </th>
+              <td><p>It is (currently) beyond the scope of skal to define named individuals of this type with rigour.  There are four well-known kinds of n-ary metrics:</p>
+<ol>
+<li>
+<p>n-metric:
+Given a <em>metric</em> d between two concepts (i.e. d(x,x) = 0, d(x,y) = d(y,x), and d(x,y) &lt;= d(x,z)+d(z,y)) an <em>n-metric</em> can be defined as D(x_1,...,x_n) := Σ_{i&lt;j} d(x_i,x_j), the following properties hold as per the underlying metric's axioms: D(x,...,x) = 0, D(x_1,...,x_n) = D(x_σ(1),...,x_σ(n)), D(x_1,...,x_n) &lt;= d(x_1,z) + D(z,x_2,...,x_n), and monotonicity: D(x_1,...,x_k,x_k,...) &lt;= D(x_1,...,x_k,x_(k+1),x_(k+1),...).</p>
+</li>
+<li>
+<p>n-ultrametric:
+Given an <em>ultrametric</em> <code>u</code> between two concepts (i.e. u(x,x) = 0, u(x,y) = u(y,x), and u(x,y) &lt;= max{u(x,z),u(z,y)}) an <em>n-ultrametric</em> can be defined as U(x_1,...,x_n) := max_{i&lt;j} u(x_i,x_j), the following properties hold as per the underlying ultrametric's axioms: U(x,...,x) = 0, U(x_1,...,x_n) = U(x_σ(1),...,x_σ(n)), U(x_1,...,x_n) &lt;= max{u(x_1,z), U(z,x_2,...,x_n), and monotonicity: U(x_1,...,x_k,x_k,...) &lt;= U(x_1,...,x_k,x_(k+1),x_(k+1),...).</p>
+</li>
+<li>
+<p>MST length:
+Given a <em>metric</em> d between two concepts, the MST length is defined as MST(X):=min_T Σ_(i,j)\in E(T) d(x_i,x_j), where E(T) is the set of edges of the spanning tree T.  The following properties hold: MST({x,...,x}) = 0, MST({x_1,...,x_n})=MST({x_σ(1),...,x_σ(n)}), MST(X∪Y)&lt;=MST(X∪Z)+MST(Z∪Y), and monotonicity: MST({x_1,...,x_k,x_k,...}) &lt;= MST({x_1,...,x_k,x_(k+1),x_(k+1),...}).</p>
+</li>
+<li>
+<p>Steiner tree length:
+Given a <em>metric</em> d between two concepts, the Steiner tree length is defined as ST(X):=inf_T Σ_(u,v)\in E(T) d(u,v) where E(T) is the set of edges of a tree whose vertex set contains X and any number of Steiner points.  The following properties hold: ST({x,...,x}) = 0, ST({x_1,...,x_n})=ST({x_σ(1),...,x_σ(n)}), ST(X∪Y)&lt;=ST(X∪Z)+ST(Z∪Y), and monotonicity: ST(x_1,...,x_k,x_k,...) &lt;= ST(x_1,...,x_k,x_(k+1),x_(k+1),...).</p>
+</li>
+</ol>
+<p>The first two of which can be traced to the metric distance of individual pairs of points (aka concepts) whereas the latter two are global in nature.  ST even employs points (i.e. concepts) that aren't part of the original set of concepts in its definition.</p>
+<p>Between these four the following holds over a fixed underlying (binary) metric d: ST &lt;= MST &lt;= U &lt;= D.</p></td>
             </tr>
             <tr>
               <th>
@@ -1011,7 +1044,8 @@ td {
               <th>
                 <a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
               </th>
-              <td><p>Measures the "exactness" of an alignment, optionally qualified by the metric in <code>skal:metric</code>.</p></td>
+              <td><p>Measures the "exactness" of an alignment, optionally qualified by the metric in <code>skal:metric</code>.</p>
+<p>The lower bound of any metric is 0, which holds iff all concepts are exactly aligned.</p></td>
             </tr>
             <tr>
               <th>

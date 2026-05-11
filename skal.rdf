@@ -125,7 +125,9 @@ As mentioned before, skal is aware of concepts that diverge in time.  The exampl
     </owl:equivalentClass>
   </owl:Class>
   <owl:Class rdf:about="http://purl.org/skal/ExactMatch">
-    <rdfs:comment xml:lang="en">A reified n-ary alignment describing a SKOS exactMatch group.</rdfs:comment>
+    <rdfs:comment xml:lang="en">A reified n-ary alignment describing a SKOS exactMatch group.
+
+This is a convenience class to allow for migrating existing `skos:exactMatch` collections to skal.</rdfs:comment>
     <rdfs:label xml:lang="en">exact match</rdfs:label>
     <rdfs:subClassOf rdf:resource="http://purl.org/skal/Alignment"/>
     <owl:equivalentClass>
@@ -144,6 +146,7 @@ As mentioned before, skal is aware of concepts that diverge in time.  The exampl
       </owl:Class>
     </owl:equivalentClass>
     <owl:hasKey rdf:resource="http://purl.org/skal/aligns"/>
+    <skos:note xml:lang="en">Individuals of this type employ the same semantics as `skos:exactMatch` assertions.  That is, a second individual that aligns one of the concepts of the first individual is considered `owl:sameAs` this first individual.  And thereby capturing the transitive closure of all concepts on the subject and object side of a `skos:exactMatch` collection.</skos:note>
   </owl:Class>
   <sh:NodeShape rdf:about="http://purl.org/skal/ExactMatchRuleShape">
     <rdfs:comment xml:lang="en">SHACL rule to materialise pairwise skos:exactMatch triples from skal:ExactMatch individuals.</rdfs:comment>
@@ -206,8 +209,25 @@ As mentioned before, skal is aware of concepts that diverge in time.  The exampl
     </owl:equivalentClass>
   </owl:Class>
   <owl:Class rdf:about="http://purl.org/skal/Metric">
-    <rdfs:comment xml:lang="en">The metric used to express the diameter of an alignment</rdfs:comment>
+    <rdfs:comment xml:lang="en">The metric used to express the diameter of an alignment.</rdfs:comment>
     <rdfs:label xml:lang="en">metric</rdfs:label>
+    <skos:note xml:lang="en">It is (currently) beyond the scope of skal to define named individuals of this type with rigour.  There are four well-known kinds of n-ary metrics:
+
+1. n-metric:
+Given a *metric* d between two concepts (i.e. d(x,x) = 0, d(x,y) = d(y,x), and d(x,y) &lt;= d(x,z)+d(z,y)) an *n-metric* can be defined as D(x_1,...,x_n) := Σ_{i&lt;j} d(x_i,x_j), the following properties hold as per the underlying metric's axioms: D(x,...,x) = 0, D(x_1,...,x_n) = D(x_σ(1),...,x_σ(n)), D(x_1,...,x_n) &lt;= d(x_1,z) + D(z,x_2,...,x_n), and monotonicity: D(x_1,...,x_k,x_k,...) &lt;= D(x_1,...,x_k,x_(k+1),x_(k+1),...).
+
+1. n-ultrametric:
+Given an *ultrametric* `u` between two concepts (i.e. u(x,x) = 0, u(x,y) = u(y,x), and u(x,y) &lt;= max{u(x,z),u(z,y)}) an *n-ultrametric* can be defined as U(x_1,...,x_n) := max_{i&lt;j} u(x_i,x_j), the following properties hold as per the underlying ultrametric's axioms: U(x,...,x) = 0, U(x_1,...,x_n) = U(x_σ(1),...,x_σ(n)), U(x_1,...,x_n) &lt;= max{u(x_1,z), U(z,x_2,...,x_n), and monotonicity: U(x_1,...,x_k,x_k,...) &lt;= U(x_1,...,x_k,x_(k+1),x_(k+1),...).
+
+1. MST length:
+Given a *metric* d between two concepts, the MST length is defined as MST(X):=min_T Σ_(i,j)\in E(T) d(x_i,x_j), where E(T) is the set of edges of the spanning tree T.  The following properties hold: MST({x,...,x}) = 0, MST({x_1,...,x_n})=MST({x_σ(1),...,x_σ(n)}), MST(X∪Y)&lt;=MST(X∪Z)+MST(Z∪Y), and monotonicity: MST({x_1,...,x_k,x_k,...}) &lt;= MST({x_1,...,x_k,x_(k+1),x_(k+1),...}).
+
+1. Steiner tree length:
+Given a *metric* d between two concepts, the Steiner tree length is defined as ST(X):=inf_T Σ_(u,v)\in E(T) d(u,v) where E(T) is the set of edges of a tree whose vertex set contains X and any number of Steiner points.  The following properties hold: ST({x,...,x}) = 0, ST({x_1,...,x_n})=ST({x_σ(1),...,x_σ(n)}), ST(X∪Y)&lt;=ST(X∪Z)+ST(Z∪Y), and monotonicity: ST(x_1,...,x_k,x_k,...) &lt;= ST(x_1,...,x_k,x_(k+1),x_(k+1),...).
+
+The first two of which can be traced to the metric distance of individual pairs of points (aka concepts) whereas the latter two are global in nature.  ST even employs points (i.e. concepts) that aren't part of the original set of concepts in its definition.
+
+Between these four the following holds over a fixed underlying (binary) metric d: ST &lt;= MST &lt;= U &lt;= D.</skos:note>
   </owl:Class>
   <owl:Class rdf:about="http://purl.org/skal/PermanentAlignment">
     <rdfs:comment xml:lang="en">An alignment that holds permanently.</rdfs:comment>
@@ -307,7 +327,9 @@ As mentioned before, skal is aware of concepts that diverge in time.  The exampl
     <skos:note>This property is explicitly not an owl:InverseFunctionalProperty because the point of reified alignments is that additional properties (like validity or sources) might be associated with the alignment.</skos:note>
   </owl:ObjectProperty>
   <owl:DatatypeProperty rdf:about="http://purl.org/skal/diameter">
-    <rdfs:comment xml:lang="en">Measures the "exactness" of an alignment, optionally qualified by the metric in `skal:metric`.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Measures the "exactness" of an alignment, optionally qualified by the metric in `skal:metric`.
+
+The lower bound of any metric is 0, which holds iff all concepts are exactly aligned.</rdfs:comment>
     <rdfs:domain rdf:resource="http://purl.org/skal/Alignment"/>
     <rdfs:label xml:lang="en">diameter</rdfs:label>
     <rdfs:range>

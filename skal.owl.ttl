@@ -198,14 +198,34 @@ skal:ExactMatch
 		)
 	] ;
 	owl:hasKey	skal:aligns ;
-	rdfs:comment	"A reified n-ary alignment describing a SKOS exactMatch group."@en ;
+	rdfs:comment	"""A reified n-ary alignment describing a SKOS exactMatch group.
+
+This is a convenience class to allow for migrating existing `skos:exactMatch` collections to skal."""@en ;
 	rdfs:label	"exact match"@en ;
-	rdfs:subClassOf	skal:Alignment .
+	rdfs:subClassOf	skal:Alignment ;
+	skos:note	"""Individuals of this type employ the same semantics as `skos:exactMatch` assertions.  That is, a second individual that aligns one of the concepts of the first individual is considered `owl:sameAs` this first individual.  And thereby capturing the transitive closure of all concepts on the subject and object side of a `skos:exactMatch` collection."""@en .
 
 skal:Metric
 	a	owl:Class ;
-	rdfs:comment	"The metric used to express the diameter of an alignment"@en ;
-	rdfs:label	"metric"@en .
+	rdfs:comment	"The metric used to express the diameter of an alignment."@en ;
+	rdfs:label	"metric"@en ;
+	skos:note	"""It is (currently) beyond the scope of skal to define named individuals of this type with rigour.  There are four well-known kinds of n-ary metrics:
+
+1. n-metric:
+Given a *metric* d between two concepts (i.e. d(x,x) = 0, d(x,y) = d(y,x), and d(x,y) <= d(x,z)+d(z,y)) an *n-metric* can be defined as D(x_1,...,x_n) := Σ_{i<j} d(x_i,x_j), the following properties hold as per the underlying metric's axioms: D(x,...,x) = 0, D(x_1,...,x_n) = D(x_σ(1),...,x_σ(n)), D(x_1,...,x_n) <= d(x_1,z) + D(z,x_2,...,x_n), and monotonicity: D(x_1,...,x_k,x_k,...) <= D(x_1,...,x_k,x_(k+1),x_(k+1),...).
+
+1. n-ultrametric:
+Given an *ultrametric* `u` between two concepts (i.e. u(x,x) = 0, u(x,y) = u(y,x), and u(x,y) <= max{u(x,z),u(z,y)}) an *n-ultrametric* can be defined as U(x_1,...,x_n) := max_{i<j} u(x_i,x_j), the following properties hold as per the underlying ultrametric's axioms: U(x,...,x) = 0, U(x_1,...,x_n) = U(x_σ(1),...,x_σ(n)), U(x_1,...,x_n) <= max{u(x_1,z), U(z,x_2,...,x_n), and monotonicity: U(x_1,...,x_k,x_k,...) <= U(x_1,...,x_k,x_(k+1),x_(k+1),...).
+
+1. MST length:
+Given a *metric* d between two concepts, the MST length is defined as MST(X):=min_T Σ_(i,j)\\in E(T) d(x_i,x_j), where E(T) is the set of edges of the spanning tree T.  The following properties hold: MST({x,...,x}) = 0, MST({x_1,...,x_n})=MST({x_σ(1),...,x_σ(n)}), MST(X∪Y)<=MST(X∪Z)+MST(Z∪Y), and monotonicity: MST({x_1,...,x_k,x_k,...}) <= MST({x_1,...,x_k,x_(k+1),x_(k+1),...}).
+
+1. Steiner tree length:
+Given a *metric* d between two concepts, the Steiner tree length is defined as ST(X):=inf_T Σ_(u,v)\\in E(T) d(u,v) where E(T) is the set of edges of a tree whose vertex set contains X and any number of Steiner points.  The following properties hold: ST({x,...,x}) = 0, ST({x_1,...,x_n})=ST({x_σ(1),...,x_σ(n)}), ST(X∪Y)<=ST(X∪Z)+ST(Z∪Y), and monotonicity: ST(x_1,...,x_k,x_k,...) <= ST(x_1,...,x_k,x_(k+1),x_(k+1),...).
+
+The first two of which can be traced to the metric distance of individual pairs of points (aka concepts) whereas the latter two are global in nature.  ST even employs points (i.e. concepts) that aren't part of the original set of concepts in its definition.
+
+Between these four the following holds over a fixed underlying (binary) metric d: ST <= MST <= U <= D."""@en .
 
 #################################################################
 # Object Properties
@@ -236,7 +256,9 @@ Moreover, the lower bound of any metric is 0, which holds iff all concepts are e
 
 skal:diameter
 	a	owl:DatatypeProperty ;
-	rdfs:comment	"""Measures the \"exactness\" of an alignment, optionally qualified by the metric in `skal:metric`."""@en ;
+	rdfs:comment	"""Measures the \"exactness\" of an alignment, optionally qualified by the metric in `skal:metric`.
+
+The lower bound of any metric is 0, which holds iff all concepts are exactly aligned."""@en ;
 	rdfs:domain	skal:Alignment ;
 	rdfs:range	[
 		a	owl:Datatype ;
