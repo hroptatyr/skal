@@ -648,15 +648,7 @@ td {
                   <sup class="sup-c" title="OWL/RDFS Class">c</sup>
                 </span>
                 <span class="cardinality">and</span>
-                <span>
-                  <span>
-                    <a href="http://purl.org/tempo/validFrom">tempo:validFrom</a>
-                    <span>
-                      <span class="cardinality">min</span>
-                      <span>1</span>
-                    </span><br>
-                  </span>
-                </span>
+                <span class="cardinality">or</span>
                 <span class="cardinality">and</span>
                 <span>
                   <span>
@@ -668,7 +660,15 @@ td {
                   </span>
                 </span>
                 <span class="cardinality">and</span>
-                <span class="cardinality">or</span>
+                <span>
+                  <span>
+                    <a href="http://purl.org/tempo/validFrom">tempo:validFrom</a>
+                    <span>
+                      <span class="cardinality">min</span>
+                      <span>1</span>
+                    </span><br>
+                  </span>
+                </span>
               </td>
             </tr>
           </table>
@@ -748,11 +748,6 @@ td {
               </th>
               <td>
                 <span>
-                  <a href="#alignment">alignment</a>
-                  <sup class="sup-c" title="OWL/RDFS Class">c</sup>
-                </span>
-                <span class="cardinality">and</span>
-                <span>
                   <span>
                     <span>
                       <a href="#diameter">diameter</a>
@@ -763,6 +758,11 @@ td {
                       <span>1</span>
                     </span><br>
                   </span>
+                </span>
+                <span class="cardinality">and</span>
+                <span>
+                  <a href="#alignment">alignment</a>
+                  <sup class="sup-c" title="OWL/RDFS Class">c</sup>
                 </span>
               </td>
             </tr>

@@ -158,8 +158,8 @@ This is a convenience class to allow for migrating existing `skos:exactMatch` co
 				?y skos:exactMatch ?x .
 			}
 			WHERE {
-				?a	a	skal:ExactMatch ;
-					skal:aligns	?x , ?y .
+				?a a skal:ExactMatch ;
+					skal:aligns ?x , ?y .
 				FILTER (?x != ?y)
 			}
 		</sh:construct>
@@ -296,29 +296,64 @@ Between these four the following holds over a fixed underlying (binary) metric d
         </owl:intersectionOf>
       </owl:Class>
     </owl:equivalentClass>
-    <owl:hasKey>
-      <rdf:Description>
-        <rdf:first rdf:resource="http://purl.org/skal/aligns"/>
-        <rdf:rest>
-          <rdf:Description>
-            <rdf:first rdf:resource="http://purl.org/tempo/validFrom"/>
-            <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-          </rdf:Description>
-        </rdf:rest>
-      </rdf:Description>
-    </owl:hasKey>
-    <owl:hasKey>
-      <rdf:Description>
-        <rdf:first rdf:resource="http://purl.org/skal/aligns"/>
-        <rdf:rest>
-          <rdf:Description>
-            <rdf:first rdf:resource="http://purl.org/tempo/validTill"/>
-            <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-          </rdf:Description>
-        </rdf:rest>
-      </rdf:Description>
-    </owl:hasKey>
   </owl:Class>
+  <sh:NodeShape rdf:about="http://purl.org/skal/ZeroDiameterRuleShape">
+    <sh:rule>
+      <sh:SPARQLRule>
+        <sh:construct>
+			CONSTRUCT {
+				?x owl:sameAs ?y .
+			}
+			WHERE {
+				?x a skal:ExactAlignment ;
+					skal:aligns ?p .
+				?y a skal:ExactAlignment ;
+					skal:aligns ?p .
+				FILTER(?x != ?y)
+
+				OPTIONAL {
+				?x tempo:validFrom ?xfrom
+				}
+				OPTIONAL {
+				?y tempo:validFrom ?yfrom
+				}
+				FILTER(!BOUND(?xfrom) &amp;&amp; !BOUND(?yfrom) || ?xfrom = ?yfrom)
+
+				OPTIONAL {
+				?x tempo:validTill ?xtill
+				}
+				OPTIONAL {
+				?y tempo:validTill ?ytill
+				}
+				FILTER(!BOUND(?xtill) &amp;&amp; !BOUND(?ytill) || ?xtill = ?ytill)
+			}
+		</sh:construct>
+        <sh:prefixes>
+          <rdf:Description>
+            <sh:declare>
+              <rdf:Description>
+                <sh:namespace rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2002/07/owl#</sh:namespace>
+                <sh:prefix>owl</sh:prefix>
+              </rdf:Description>
+            </sh:declare>
+            <sh:declare>
+              <rdf:Description>
+                <sh:namespace rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://purl.org/skal/</sh:namespace>
+                <sh:prefix>skal</sh:prefix>
+              </rdf:Description>
+            </sh:declare>
+            <sh:declare>
+              <rdf:Description>
+                <sh:namespace rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://purl.org/tempo/</sh:namespace>
+                <sh:prefix>tempo</sh:prefix>
+              </rdf:Description>
+            </sh:declare>
+          </rdf:Description>
+        </sh:prefixes>
+      </sh:SPARQLRule>
+    </sh:rule>
+    <sh:targetClass rdf:resource="http://purl.org/skal/Alignment"/>
+  </sh:NodeShape>
   <owl:ObjectProperty rdf:about="http://purl.org/skal/aligns">
     <rdfs:comment xml:lang="en">Links an alignment individual to each concept it aligns.</rdfs:comment>
     <rdfs:domain rdf:resource="http://purl.org/skal/Alignment"/>

@@ -140,8 +140,6 @@ skal:TemporaryAlignment
 			] )
 		] )
 	] ;
-	owl:hasKey	( skal:aligns tempo:validFrom ) ;
-	owl:hasKey	( skal:aligns tempo:validTill ) ;
 	rdfs:comment	"An alignment that holds during the specified period of validity."@en ;
 	rdfs:label	"temporary alignment"@en ;
 	rdfs:subClassOf	skal:Alignment .
@@ -278,28 +276,76 @@ skal:ExactMatchRuleShape
 	a	sh:NodeShape ;
 	rdfs:comment	"SHACL rule to materialise pairwise skos:exactMatch triples from skal:ExactMatch individuals."@en ;
 	sh:targetClass	skal:ExactMatch ;
-
-	sh:rule [
-	        a sh:SPARQLRule ;
-	        sh:prefixes [
-			sh:declare [
+	sh:rule	[
+	        a	sh:SPARQLRule ;
+	        sh:prefixes	[
+			sh:declare	[
 				sh:prefix	"skos" ;
 				sh:namespace	"http://www.w3.org/2004/02/skos/core#"^^xsd:anyURI ;
 			] ;
-			sh:declare [
+			sh:declare	[
 				sh:prefix	"skal" ;
 				sh:namespace	"http://purl.org/skal/"^^xsd:anyURI ;
 			] ;
 		] ;
-		sh:construct """
+		sh:construct	"""
 			CONSTRUCT {
 				?x skos:exactMatch ?y .
 				?y skos:exactMatch ?x .
 			}
 			WHERE {
-				?a	a	skal:ExactMatch ;
-					skal:aligns	?x , ?y .
+				?a a skal:ExactMatch ;
+					skal:aligns ?x , ?y .
 				FILTER (?x != ?y)
+			}
+		""" ;
+	] .
+
+skal:ZeroDiameterRuleShape
+	a	sh:NodeShape ;
+	sh:targetClass	skal:Alignment ;
+	sh:rule	[
+		a	sh:SPARQLRule ;
+		sh:prefixes	[
+			sh:declare	[
+				sh:prefix	"owl" ;
+				sh:namespace	"http://www.w3.org/2002/07/owl#"^^xsd:anyURI ;
+			] ;
+			sh:declare	[
+				sh:prefix	"skal" ;
+				sh:namespace	"http://purl.org/skal/"^^xsd:anyURI ;
+			] ;
+			sh:declare	[
+				sh:prefix	"tempo" ;
+				sh:namespace	"http://purl.org/tempo/"^^xsd:anyURI ;
+			] ;
+		] ;
+		sh:construct	"""
+			CONSTRUCT {
+				?x owl:sameAs ?y .
+			}
+			WHERE {
+				?x a skal:ExactAlignment ;
+					skal:aligns ?p .
+				?y a skal:ExactAlignment ;
+					skal:aligns ?p .
+				FILTER(?x != ?y)
+
+				OPTIONAL {
+				?x tempo:validFrom ?xfrom
+				}
+				OPTIONAL {
+				?y tempo:validFrom ?yfrom
+				}
+				FILTER(!BOUND(?xfrom) && !BOUND(?yfrom) || ?xfrom = ?yfrom)
+
+				OPTIONAL {
+				?x tempo:validTill ?xtill
+				}
+				OPTIONAL {
+				?y tempo:validTill ?ytill
+				}
+				FILTER(!BOUND(?xtill) && !BOUND(?ytill) || ?xtill = ?ytill)
 			}
 		""" ;
 	] .
