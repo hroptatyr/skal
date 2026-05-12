@@ -221,7 +221,7 @@ Given an *ultrametric* `u` between two concepts (i.e. u(x,x) = 0, u(x,y) = u(y,x
 Given a *metric* d between two concepts, the MST length is defined as MST(X):=min_T Σ_(i,j)\\in E(T) d(x_i,x_j), where E(T) is the set of edges of the spanning tree T.  The following properties hold: MST({x,...,x}) = 0, MST({x_1,...,x_n})=MST({x_σ(1),...,x_σ(n)}), MST(X∪Y)<=MST(X∪Z)+MST(Z∪Y), and monotonicity: MST({x_1,...,x_k,x_k,...}) <= MST({x_1,...,x_k,x_(k+1),x_(k+1),...}).
 
 1. Steiner tree length:
-Given a *metric* d between two concepts, the Steiner tree length is defined as ST(X):=inf_T Σ_(u,v)\\in E(T) d(u,v) where E(T) is the set of edges of a tree whose vertex set contains X and any number of Steiner points.  The following properties hold: ST({x,...,x}) = 0, ST({x_1,...,x_n})=ST({x_σ(1),...,x_σ(n)}), ST(X∪Y)<=ST(X∪Z)+ST(Z∪Y), and monotonicity: ST(x_1,...,x_k,x_k,...) <= ST(x_1,...,x_k,x_(k+1),x_(k+1),...).
+Given a *metric* d between two concepts, the Steiner tree length is defined as ST(X):=inf_T Σ_(u,v)\\in E(T) d(u,v) where E(T) is the set of edges of a tree whose vertex set contains X and any number of Steiner points.  The following properties hold: ST({x,...,x}) = 0, ST({x_1,...,x_n})=ST({x_σ(1),...,x_σ(n)}), ST(X∪Y)<=ST(X∪Z)+ST(Z∪Y), and monotonicity: ST({x_1,...,x_k,x_k,...}) <= ST({x_1,...,x_k,x_(k+1),x_(k+1),...}).
 
 The first two of which can be traced to the metric distance of individual pairs of points (aka concepts) whereas the latter two are global in nature.  ST even employs points (i.e. concepts) that aren't part of the original set of concepts in its definition.
 
