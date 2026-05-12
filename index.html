@@ -629,6 +629,12 @@ td {
             </tr>
             <tr>
               <th>
+                <a class="hover_property" href="http://www.w3.org/2004/02/skos/core#note" title="A general note, for any purpose. Defined in SKOS Vocabulary">Note</a>
+              </th>
+              <td><p>While skal imports the TempO ontology to define <code>skal:TemporalAlignment</code>--a telltale sign of limited temporal validity is the presence of <code>tempo:validFrom</code> and/or <code>tempo:validTill</code>--it basically remains open to how exactly the limited temporal validity is established.  An alternative equivalence is given as the complement of <code>skal:PermanentAlignment</code>.</p></td>
+            </tr>
+            <tr>
+              <th>
                 <a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subClassOf" title="The subject is a subclass of a class. Defined in The RDF Schema vocabulary (RDFS)">Sub Class Of</a>
               </th>
               <td>
@@ -643,32 +649,42 @@ td {
                 <a class="hover_property" href="http://www.w3.org/2002/07/owl#equivalentClass" title="The property that determines that two given classes are equivalent, and that is used to specify datatype definitions. Defined in The OWL 2 Schema vocabulary (OWL 2)">Equivalentclass</a>
               </th>
               <td>
-                <span>
-                  <span>
-                    <a href="http://purl.org/tempo/validTill">tempo:validTill</a>
+                <ul>
+                  <li>
+                    <span class="cardinality">or</span>
+                    <span class="cardinality">and</span>
                     <span>
-                      <span class="cardinality">min</span>
-                      <span>1</span>
-                    </span><br>
-                  </span>
-                </span>
-                <span class="cardinality">and</span>
-                <span>
-                  <span>
-                    <a href="http://purl.org/tempo/validFrom">tempo:validFrom</a>
+                      <span>
+                        <a href="http://purl.org/tempo/validFrom">tempo:validFrom</a>
+                        <span>
+                          <span class="cardinality">min</span>
+                          <span>1</span>
+                        </span><br>
+                      </span>
+                    </span>
+                    <span class="cardinality">and</span>
                     <span>
-                      <span class="cardinality">min</span>
-                      <span>1</span>
-                    </span><br>
-                  </span>
-                </span>
-                <span class="cardinality">and</span>
-                <span class="cardinality">or</span>
-                <span class="cardinality">and</span>
-                <span>
-                  <a href="#alignment">alignment</a>
-                  <sup class="sup-c" title="OWL/RDFS Class">c</sup>
-                </span>
+                      <a href="#alignment">alignment</a>
+                      <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+                    </span>
+                    <span class="cardinality">and</span>
+                    <span>
+                      <span>
+                        <a href="http://purl.org/tempo/validTill">tempo:validTill</a>
+                        <span>
+                          <span class="cardinality">min</span>
+                          <span>1</span>
+                        </span><br>
+                      </span>
+                    </span>
+                  </li>
+                  <li>
+                    <span>
+                      <a href="#alignment">alignment</a>
+                      <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+                    </span>
+                  </li>
+                </ul>
               </td>
             </tr>
           </table>
@@ -802,6 +818,11 @@ td {
               </th>
               <td>
                 <span>
+                  <a href="#alignment">alignment</a>
+                  <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+                </span>
+                <span class="cardinality">and</span>
+                <span>
                   <span>
                     <span>
                       <a href="#diameter">diameter</a>
@@ -934,6 +955,8 @@ Given a <em>metric</em> d between two concepts, the Steiner tree length is defin
       </div>
       <span class="cardinality">and</span>
       <span class="cardinality">,</span>
+      <span class="cardinality">and</span>
+      <span class="cardinality">,</span>
       <div class="section" id="objectproperties">
         <h2>Object Properties</h2>
         <div class="property entity" id="aligns">
@@ -966,17 +989,6 @@ Given a <em>metric</em> d between two concepts, the Steiner tree length is defin
               <td>
                 <span>
                   <a href="#alignment">alignment</a>
-                  <sup class="sup-c" title="OWL/RDFS Class">c</sup>
-                </span>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
-              </th>
-              <td>
-                <span>
-                  <a href="http://www.w3.org/2002/07/owl#Thing">Thing</a>
                   <sup class="sup-c" title="OWL/RDFS Class">c</sup>
                 </span>
               </td>

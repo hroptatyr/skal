@@ -140,10 +140,19 @@ skal:TemporaryAlignment
 				owl:minCardinality	"1"^^xsd:nonNegativeInteger
 			] )
 		] )
+	] , [
+		a	owl:Class ;
+		owl:intersectionOf	(
+		skal:Alignment
+		[
+			a	owl:Class ;
+			owl:complementOf	skal:PermanentAlignment
+		] )
 	] ;
 	rdfs:comment	"An alignment that holds during the specified period of validity."@en ;
 	rdfs:label	"temporary alignment"@en ;
-	rdfs:subClassOf	skal:Alignment .
+	rdfs:subClassOf	skal:Alignment ;
+	skos:note	"""While skal imports the TempO ontology to define `skal:TemporalAlignment`--a telltale sign of limited temporal validity is the presence of `tempo:validFrom` and/or `tempo:validTill`--it basically remains open to how exactly the limited temporal validity is established.  An alternative equivalence is given as the complement of `skal:PermanentAlignment`."""@en.
 
 skal:PermanentAlignment
 	a	owl:Class ;
@@ -180,9 +189,14 @@ skal:MeasuredAlignment
 skal:ExactAlignment
 	a	owl:Class ;
 	owl:equivalentClass	[
-		a	owl:Restriction ;
-		owl:onProperty	skal:diameter ;
-		owl:hasValue	"0.0"^^xsd:decimal
+		a	owl:Class ;
+		owl:intersectionOf	(
+		skal:Alignment
+		[
+			a	owl:Restriction ;
+			owl:onProperty	skal:diameter ;
+			owl:hasValue	"0.0"^^xsd:decimal
+		] )
 	] ;
 	rdfs:comment	"An alignment with a diameter of exactly 0."@en ;
 	rdfs:label	"exact alignment"@en ;
@@ -236,7 +250,6 @@ skal:aligns
 	rdfs:comment	"Links an alignment individual to each concept it aligns."@en ;
 	rdfs:domain	skal:Alignment ;
 	rdfs:label	"aligns"@en ;
-	rdfs:range	owl:Thing ;
 	skos:note	"This property is explicitly not an owl:InverseFunctionalProperty because the point of reified alignments is that additional properties (like validity or sources) might be associated with the alignment." .
 
 skal:metric
