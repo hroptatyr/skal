@@ -122,6 +122,7 @@ skal:Alignment
 
 skal:TemporaryAlignment
 	a	owl:Class ;
+	owl:disjointWith	skal:PermanentAlignment ;
 	owl:equivalentClass	[
 		a	owl:Class ;
 		owl:intersectionOf	(
@@ -146,6 +147,7 @@ skal:TemporaryAlignment
 
 skal:PermanentAlignment
 	a	owl:Class ;
+	owl:disjointWith	skal:TemporaryAlignment ;
 	owl:equivalentClass	[
 		a	owl:Class ;
 		owl:intersectionOf	(

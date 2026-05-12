@@ -233,6 +233,7 @@ Between these four the following holds over a fixed underlying (binary) metric d
     <rdfs:comment xml:lang="en">An alignment that holds permanently.</rdfs:comment>
     <rdfs:label xml:lang="en">permanent alignment</rdfs:label>
     <rdfs:subClassOf rdf:resource="http://purl.org/skal/Alignment"/>
+    <owl:disjointWith rdf:resource="http://purl.org/skal/TemporaryAlignment"/>
     <owl:equivalentClass>
       <owl:Class>
         <owl:intersectionOf>
@@ -257,6 +258,7 @@ Between these four the following holds over a fixed underlying (binary) metric d
     <rdfs:comment xml:lang="en">An alignment that holds during the specified period of validity.</rdfs:comment>
     <rdfs:label xml:lang="en">temporary alignment</rdfs:label>
     <rdfs:subClassOf rdf:resource="http://purl.org/skal/Alignment"/>
+    <owl:disjointWith rdf:resource="http://purl.org/skal/PermanentAlignment"/>
     <owl:equivalentClass>
       <owl:Class>
         <owl:intersectionOf>
