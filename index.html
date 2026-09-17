@@ -525,6 +525,14 @@ td {
             </tr>
             <tr>
               <th>
+                <a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subClassOf" title="The subject is a subclass of a class. Defined in The RDF Schema vocabulary (RDFS)">Sub Class Of</a>
+              </th>
+              <td>
+                <a href="http://purl.org/nemo/gufo#Relator">gufo:Relator</a>
+              </td>
+            </tr>
+            <tr>
+              <th>
                 <a class="hover_property" href="http://www.w3.org/2002/07/owl#equivalentClass" title="The property that determines that two given classes are equivalent, and that is used to specify datatype definitions. Defined in The OWL 2 Schema vocabulary (OWL 2)">Equivalentclass</a>
               </th>
               <td>
@@ -596,6 +604,12 @@ td {
                   <li>
                     <span>
                       <a href="#ExactAlignment">exact alignment</a>
+                      <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+                    </span>
+                  </li>
+                  <li>
+                    <span>
+                      <a href="#CloseAlignment">close alignment</a>
                       <sup class="sup-c" title="OWL/RDFS Class">c</sup>
                     </span>
                   </li>
@@ -818,11 +832,6 @@ td {
               </th>
               <td>
                 <span>
-                  <a href="#alignment">alignment</a>
-                  <sup class="sup-c" title="OWL/RDFS Class">c</sup>
-                </span>
-                <span class="cardinality">and</span>
-                <span>
                   <span>
                     <span>
                       <a href="#diameter">diameter</a>
@@ -838,6 +847,70 @@ td {
                       </span>
                     </span><br>
                   </span>
+                </span>
+                <span class="cardinality">and</span>
+                <span>
+                  <a href="#alignment">alignment</a>
+                  <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+                </span>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="property entity" id="CloseAlignment">
+          <h3>close alignment
+            <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+          </h3>
+          <table>
+            <tr>
+              <th>IRI</th>
+              <td>
+                <code>http://purl.org/skal/CloseAlignment</code>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+              </th>
+              <td><p>An alignment with a diameter &gt;0.</p></td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subClassOf" title="The subject is a subclass of a class. Defined in The RDF Schema vocabulary (RDFS)">Sub Class Of</a>
+              </th>
+              <td>
+                <span>
+                  <a href="#alignment">alignment</a>
+                  <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://www.w3.org/2002/07/owl#equivalentClass" title="The property that determines that two given classes are equivalent, and that is used to specify datatype definitions. Defined in The OWL 2 Schema vocabulary (OWL 2)">Equivalentclass</a>
+              </th>
+              <td>
+                <span>
+                  <span>
+                    <span>
+                      <a href="#diameter">diameter</a>
+                      <sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+                    </span>
+                    <span>
+                      <span class="cardinality">some</span>
+                      <span>
+                        <span>
+                          <a href="http://www.w3.org/2001/XMLSchema#positiveDecimal">xsd:positiveDecimal</a>
+                          <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+                        </span>
+                      </span>
+                    </span><br>
+                  </span>
+                </span>
+                <span class="cardinality">and</span>
+                <span>
+                  <a href="#alignment">alignment</a>
+                  <sup class="sup-c" title="OWL/RDFS Class">c</sup>
                 </span>
               </td>
             </tr>
@@ -884,12 +957,12 @@ td {
               </th>
               <td>
                 <span>
-                  <a href="#ExactAlignment">exact alignment</a>
+                  <a href="#PermanentAlignment">permanent alignment</a>
                   <sup class="sup-c" title="OWL/RDFS Class">c</sup>
                 </span>
                 <span class="cardinality">and</span>
                 <span>
-                  <a href="#PermanentAlignment">permanent alignment</a>
+                  <a href="#ExactAlignment">exact alignment</a>
                   <sup class="sup-c" title="OWL/RDFS Class">c</sup>
                 </span>
               </td>
@@ -981,6 +1054,14 @@ Given a <em>metric</em> d between two concepts, the Steiner tree length is defin
                 <a class="hover_property" href="http://www.w3.org/2004/02/skos/core#note" title="A general note, for any purpose. Defined in SKOS Vocabulary">Note</a>
               </th>
               <td><p>This property is explicitly not an owl:InverseFunctionalProperty because the point of reified alignments is that additional properties (like validity or sources) might be associated with the alignment.</p></td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+              </th>
+              <td>
+                <a href="http://purl.org/nemo/gufo#mediates">gufo:mediates</a>
+              </td>
             </tr>
             <tr>
               <th>
@@ -1095,6 +1176,10 @@ Given a <em>metric</em> d between two concepts, the Steiner tree length is defin
           <dd>
             <code>http://purl.org/dc/terms/</code>
           </dd>
+          <dt id="gufo">gufo</dt>
+          <dd>
+            <code>http://purl.org/nemo/gufo#</code>
+          </dd>
           <dt id="owl">owl</dt>
           <dd>
             <code>http://www.w3.org/2002/07/owl#</code>
@@ -1199,6 +1284,9 @@ Given a <em>metric</em> d between two concepts, the Steiner tree length is defin
               <a href="#ExactAlignment">exact alignment</a>
             </li>
             <li>
+              <a href="#CloseAlignment">close alignment</a>
+            </li>
+            <li>
               <a href="#ExactMatch">exact match</a>
             </li>
             <li>
@@ -1242,6 +1330,9 @@ Given a <em>metric</em> d between two concepts, the Steiner tree length is defin
             </li>
             <li>
               <a href="#dct">dct</a>
+            </li>
+            <li>
+              <a href="#gufo">gufo</a>
             </li>
             <li>
               <a href="#owl">owl</a>

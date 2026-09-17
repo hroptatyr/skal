@@ -108,6 +108,20 @@ As mentioned before, skal is aware of concepts that diverge in time.  The exampl
 	vann:preferredNamespaceUri	"http://purl.org/skal/" .
 
 #################################################################
+# datatypes
+#################################################################
+
+xsd:positiveDecimal
+	a rdfs:Datatype ;
+	owl:equivalentClass [
+		a rdfs:Datatype ;
+		owl:onDatatype	xsd:decimal ;
+		owl:withRestrictions ( [
+			xsd:minExclusive "0"^^xsd:decimal
+		] )
+        ] .
+
+#################################################################
 # Classes
 #################################################################
 
@@ -203,6 +217,24 @@ skal:ExactAlignment
 	rdfs:comment	"An alignment with a diameter of exactly 0."@en ;
 	rdfs:label	"exact alignment"@en ;
 	rdfs:subClassOf	skal:Alignment .
+
+skal:CloseAlignment
+	a	owl:Class ;
+	owl:disjointWith	skal:ExactAlignment ;
+	owl:equivalentClass	[
+		a	owl:Class ;
+		owl:intersectionOf	(
+		skal:Alignment
+		[
+			a	owl:Restriction ;
+			owl:onProperty	skal:diameter ;
+			owl:someValuesFrom	xsd:positiveDecimal
+		] )
+	] ;
+	rdfs:comment	"An alignment with a diameter >0."@en ;
+	rdfs:label	"close alignment"@en ;
+	rdfs:subClassOf	skal:Alignment .
+
 
 skal:ExactMatch
 	a	owl:Class ;
